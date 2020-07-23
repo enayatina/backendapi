@@ -16,6 +16,10 @@ app.get('/api/v1/calculators', (req, res) => {
 res.send('show plan');
 });
 
+app.get('/api/v1/master', (req, res) => {
+  res.send('show master plan');
+  });
+
 app.post('/api/v1/calculators', (req, res) => {
   res.send('create plan');
   });
