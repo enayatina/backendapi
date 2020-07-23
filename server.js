@@ -9,19 +9,25 @@ dotenv.config({ path: './config/config.env' });
 //connect to database
 connectDB();
 
-//calling route file
-const planCalculator = require('./routes/calculators/plan_calculator');
-const auth = require('./routes/auth');
-
 const app = express();
+
+
+app.get('/api/v1/calculators', (req, res) => {
+res.send('show plan');
+});
+
+app.post('/api/v1/calculators', (req, res) => {
+  res.send('create plan');
+  });
+
+app.put('/api/v1/calculators/:id', (req, res) => {
+  res.send(`update plan with id: ${ req.params.id }`);
+  });
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-//Mount routers
-app.use('/api/v1/calculators/', planCalculator);
-app.use('/api/v1/auth/', auth);
 
 PORT = process.env.PORT || 5000;
 const server = app.listen(
