@@ -1,8 +1,11 @@
 const mongoose = require('mongoose');
 
 const LibilitiesSchema = new mongoose.Schema({
-    name: String
-        
+  name: {
+    type: String,
+    unique: true,
+    required: true,
+  },
 });
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model('Libility', LibilitiesSchema);
