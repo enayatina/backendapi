@@ -35,16 +35,9 @@ const UserSchema = new mongoose.Schema({
   gender: {
     type: String,
   },
-  username: {
-    type: String,
-    required: [true, 'Please add a username'],
-    unique: true,
-    trim: true,
-    maxlength: [50, 'Name can not be more then 50 char'],
-  },
   password: {
     type: String,
-    required: [true, 'Please add a password'],
+    required: false,
     unique: false,
     minlength: 6,
     select: false,
@@ -59,6 +52,22 @@ const UserSchema = new mongoose.Schema({
     type: String,
     enum: ['guest', 'registerd'],
     default: 'guest',
+  },
+  savings: {
+    type: String,
+    required: true,
+  },
+  fixedDeposit: {
+    type: String,
+    required: true,
+  },
+  investments: {
+    type: String,
+    required: true,
+  },
+  residentialProperty: {
+    type: String,
+    required: true,
   },
 });
 
