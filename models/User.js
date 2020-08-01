@@ -53,22 +53,6 @@ const UserSchema = new mongoose.Schema({
     enum: ['guest', 'registerd'],
     default: 'guest',
   },
-  savings: {
-    type: String,
-    required: true,
-  },
-  fixedDeposit: {
-    type: String,
-    required: true,
-  },
-  investments: {
-    type: String,
-    required: true,
-  },
-  residentialProperty: {
-    type: String,
-    required: true,
-  },
 });
 
 module.exports = mongoose.model('User', UserSchema);
