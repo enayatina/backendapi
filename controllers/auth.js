@@ -4,12 +4,12 @@ const User = require('../models/User');
 const Assets = require('../models/Assets');
 const LiabilityData = require('../models/LiabilityData');
 const sgMail = require('@sendgrid/mail');
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 //@desc    Register a user
 //@method  POST /api/v1/auth/register
 //@auth    Public
 exports.register = asyncHandler(async (req, res, next) => {
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
   //Registeration process will be completed in 3 steps
   //step1: get the basic details of user { gender, age, email } and store it into the db
   //Inser user details
@@ -60,8 +60,8 @@ exports.register = asyncHandler(async (req, res, next) => {
     // https://github.com/sendgrid/sendgrid-nodejs
 
     const msg = {
-      to: 'vaibhav.nadgonde1980@gmail.com',
-      from: 'itgenesys@gmail.com',
+      to: 'itgenesys@gmail.com',
+      from: 'vaibhav.nadgonde1980@gmail.com',
       subject: 'Sending with Twilio SendGrid is Fun',
       text: 'and easy to do anywhere, even with Node.js',
       html: '<strong>and easy to do anywhere, even with Node.js</strong>',
