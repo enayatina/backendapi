@@ -3,6 +3,8 @@ const asyncHandler = require('../middleware/async');
 const User = require('../models/User');
 const Assets = require('../models/Assets');
 const LiabilityData = require('../models/LiabilityData');
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 //@desc    Register a user
 //@method  POST /api/v1/auth/register
@@ -52,7 +54,19 @@ exports.register = asyncHandler(async (req, res, next) => {
       libilities: libility_data,
       userID: userID,
     });
-    console.log(libility.libilities);
+
+    //send email to user
+    // using Twilio SendGrid's v3 Node.js Library
+    // https://github.com/sendgrid/sendgrid-nodejs
+
+    const msg = {
+      to: 'vaibhav.nadgonde1980@gmail.com',
+      from: 'itgenesys@gmail.com',
+      subject: 'Sending with Twilio SendGrid is Fun',
+      text: 'and easy to do anywhere, even with Node.js',
+      html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+    };
+    sgMail.send(msg);
   } else {
     console.log('do nothing', req.body.liabilities);
   }
