@@ -2,6 +2,7 @@ const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
 const User = require('../models/User');
 const Assets = require('../models/Assets');
+const LiabilityData = require('../models/LiabilityData');
 
 //@desc    Register a user
 //@method  POST /api/v1/auth/register
@@ -38,6 +39,23 @@ exports.register = asyncHandler(async (req, res, next) => {
     userID: userID,
   });
   //step3: get the _id of user and pass it to Liability collection
+
+  if (
+    typeof req.body.liabilities !== 'undefined' &&
+    req.body.liabilities.length > 0
+  ) {
+    // the array is defined and has at least one element
+
+    const libility_data = req.body.liabilities;
+    //console.log(libility_data[0].libilityID);
+    const libility = LiabilityData.insertMany({
+      libilities: libility_data,
+      userID: userID,
+    });
+    console.log(libility.libilities);
+  } else {
+    console.log('do nothing', req.body.liabilities);
+  }
 
   res.status(200).json({ success: true, msg: 'user is registerd', data: user });
 });
