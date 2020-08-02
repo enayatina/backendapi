@@ -5,18 +5,13 @@ const Libility = require('../models/Libility');
 //@desc    Add libility
 //@method  POST /api/v1/libiliy
 //@auth    Public
-exports.addLibility = async (req, res, next) => {
-  try {
-    const libility = await Libility.create(req.body);
-    res.status(201).json({
-      success: true,
-      data: libility,
-    });
-  } catch (err) {
-    //@ 400 is used for bad request
-    next(err);
-  }
-};
+exports.addLibility = asyncHandler(async (req, res, next) => {
+  const libility = await Libility.create(req.body);
+  res.status(201).json({
+    success: true,
+    data: libility,
+  });
+});
 
 //@desc    Show / list all libility
 //@method  GET /api/v1/libility
