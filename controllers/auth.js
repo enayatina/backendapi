@@ -90,7 +90,7 @@ exports.register = asyncHandler(async (req, res, next) => {
       'Hello,\n\n' +
       'Please verify your account by clicking the link: \nhttp://' +
       req.headers.host +
-      '/confirmation/' +
+      'api/v1/auth/confirmation/' +
       token.token +
       '.\n',
   };
@@ -137,4 +137,7 @@ exports.confirmation = asyncHandler(async (req, res, next) => {
     //User is confirmed and verified
     res.status(200).json({ success: true, msg: 'Thank you for verification' });
   });
+});
+exports.login = asyncHandler(async (req, res, next) => {
+  console.log(req.body);
 });
