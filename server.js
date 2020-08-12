@@ -6,7 +6,9 @@ const errorHandler = require('./middleware/error');
 
 //call router
 const planning = require('./routes/planning');
+const user = require('./routes/user');
 const libility = require('./routes/libility');
+const assumption = require('./routes/assumption');
 const auth = require('./routes/auth');
 
 const { json } = require('express');
@@ -35,7 +37,9 @@ const server = app.listen(
 //mount routes
 app.use('/api/v1/planning', planning);
 app.use('/api/v1/libility', libility);
+app.use('/api/v1/assumption', assumption);
 app.use('/api/v1/auth', auth);
+app.use('/api/v1/user', user);
 
 //middleware for error handler
 app.use(errorHandler);

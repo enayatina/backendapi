@@ -56,6 +56,23 @@ const UserSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  annual_income_after_tax: {
+    type: Number,
+    required: true,
+  },
+  monthly_expenses: {
+    type: Number,
+    required: true,
+  },
+  monthly_savings: {
+    type: Number,
+    required: true,
+  },
+});
+
+UserSchema.pre('save', async function (next) {
+  this.monthly_savings =
+    this.annual_income_after_tax / 12 - this.monthly_expenses;
 });
 
 module.exports = mongoose.model('User', UserSchema);

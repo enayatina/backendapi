@@ -26,12 +26,18 @@ exports.register = asyncHandler(async (req, res, next) => {
     investments,
     fixedDeposit,
     residentialProperty,
+    annual_income_after_tax,
+    monthly_expenses,
+    monthly_savings,
   } = req.body;
 
   const user = await User.create({
     gender,
     email,
     age,
+    annual_income_after_tax,
+    monthly_expenses,
+    monthly_savings,
   });
 
   //step2: get the _id of user which is added and pass it to Assets collection along with { savings, investments, FD, residential property}
@@ -99,6 +105,9 @@ exports.register = asyncHandler(async (req, res, next) => {
   res.status(200).json({ success: true, msg: 'user is registerd', data: user });
 });
 
+//@desc    User confirmation
+//@method  GET /api/v1/auth/confirmation/:token
+//@auth    Public
 exports.confirmation = asyncHandler(async (req, res, next) => {
   const token = await Token.findOne({ token: req.params.token });
 
