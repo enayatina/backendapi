@@ -6,6 +6,8 @@ const Token = require('../models/Token');
 const LiabilityData = require('../models/LiabilityData');
 var crypto = require('crypto');
 const sgMail = require('@sendgrid/mail');
+const Insurance = require('../models/Insurance');
+const Dependents = require('../models/Dependents');
 
 //@desc    Register a user
 //@method  POST /api/v1/auth/register
@@ -29,6 +31,12 @@ exports.register = asyncHandler(async (req, res, next) => {
     annual_income_after_tax,
     monthly_expenses,
     monthly_savings,
+    life_coverage,
+    health_insurance,
+    ci_coverage,
+    spouse,
+    kids,
+    parents,
   } = req.body;
 
   const user = await User.create({
@@ -49,6 +57,23 @@ exports.register = asyncHandler(async (req, res, next) => {
     residentialProperty,
     userID: userID,
   });
+
+  //add insurance info
+  const insurance = await Insurance.create({
+    life_coverage,
+    health_insurance,
+    ci_coverage,
+    userID: userID,
+  });
+
+  //add dependent data
+  const dependent = await Dependents.create({
+    spouse,
+    kids,
+    parents,
+    userID: userID,
+  });
+
   //step3: get the _id of user and pass it to Liability collection
 
   if (

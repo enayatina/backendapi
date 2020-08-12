@@ -53,6 +53,10 @@ const AssumptionSchema = mongoose.Schema({
     type: Number,
     required: false,
   },
+  retirement_age: {
+    type: Number,
+    required: false,
+  },
 });
 
 module.exports = mongoose.model('Assumption', AssumptionSchema);
