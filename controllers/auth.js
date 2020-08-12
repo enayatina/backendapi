@@ -89,7 +89,7 @@ exports.register = asyncHandler(async (req, res, next) => {
   // https://github.com/sendgrid/sendgrid-nodejs
 
   const msg = {
-    to: 'itgenesys@gmail.com',
+    to: email,
     from: 'vaibhav.nadgonde1980@gmail.com',
     subject: 'Account Verification Link Inside',
     text:
