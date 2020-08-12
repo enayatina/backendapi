@@ -7,6 +7,7 @@ const Token = require('../models/Token');
 const LiabilityData = require('../models/LiabilityData');
 const Insurance = require('../models/Insurance');
 const Dependents = require('../models/Dependents');
+const Goals = require('../models/Goals');
 
 //@desc    Calculate Planning Data based on user's input
 //@method  POST /api/v1/user/getPlanning/:id
@@ -100,6 +101,7 @@ exports.getPlanning = asyncHandler(async (req, res, next) => {
   //console.log(li_b);
   const ideal = Math.max(li_a, li_b);
   console.log(insurancedata);
+
   //CALCULATE SHORTFALL
   const life_insurance = ideal - insurancedata.life_coverage;
   userData.push({ life_insurance });
@@ -132,6 +134,46 @@ exports.getPlanning = asyncHandler(async (req, res, next) => {
   const health_shortfall = totalCoverage - insurancedata.health_insurance;
   userData.push({ health_shortfall });
   userData.push({ no_of_dependent });
+
+  //get goals calculations
+  const goals = await Goals.findOne({ userID: userID });
+  const arr_goal = goals.goals;
+  let totalTime = 0;
+  arr_goal.forEach((element) => {
+    totalTime += element.time_horizon;
+  });
+  console.log(totalTime);
+  if (totalTime < 2) {
+    let goal_prediction = true;
+    userData.push({ goal_prediction });
+  } else {
+    let goal_prediction = false;
+    userData.push({ goal_prediction });
+  }
+
+  //Current status calculations
+
+  //Investments
+  const emergency_fund = userAssets.savings + userAssets.fixedDeposit;
+  const monthly_salary = user.annual_income_after_tax / 12;
+  const monthly_savings = user.monthly_savings;
+  const monthly_expense = monthly_salary - monthly_savings;
+
+  const emergency_fund_ratio = emergency_fund - monthly_expense;
+  let investment_color = '';
+
+  if (emergency_fund_ratio < 3) {
+    investment_color = 'red';
+  }
+  if (emergency_fund_ratio > 3 && emergency_fund_ratio < 6) {
+    investment_color = 'green';
+  }
+  if (emergency_fund_ratio > 6) {
+    investment_color = 'blue';
+  }
+  userData.push({ investment_color });
+
+  //Insurance
 
   res.status(200).json({ success: true, data: userData });
 });

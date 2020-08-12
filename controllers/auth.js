@@ -8,6 +8,8 @@ var crypto = require('crypto');
 const sgMail = require('@sendgrid/mail');
 const Insurance = require('../models/Insurance');
 const Dependents = require('../models/Dependents');
+const Goals = require('../models/Goals');
+const Assumptions = require('../models/Assumptions');
 
 //@desc    Register a user
 //@method  POST /api/v1/auth/register
@@ -73,6 +75,33 @@ exports.register = asyncHandler(async (req, res, next) => {
     parents,
     userID: userID,
   });
+
+  // const assumption = await Assumptions.find();
+  // const number = amount * 1 + assumption.inflation_rate;
+  // console.log(number);
+  // const exponent = time_horizon;
+  // console.log(exponent);
+  // console.log(Math.pow(number, exponent));
+  // const totalGoalAmount = Math.pow(number, exponent);
+  // console.log(totalGoalAmount);
+
+  if (typeof req.body.goals !== 'undefined' && req.body.goals.length > 0) {
+    // the array is defined and has at least one element
+
+    const goal_data = req.body.goals;
+    console.log(goal_data);
+    //console.log(goal_data[0].goalID);
+    const goals = Goals.insertMany({
+      goals: goal_data,
+      userID: userID,
+    });
+
+    //Generate an OTP [6 digits ] and send it to mobile number
+    //console.log(Math.floor(100000 + Math.random() * 900000));
+    //const verificationCode = Math.floor(100000 + Math.random() * 900000);
+  } else {
+    console.log('do nothing', req.body.goals);
+  }
 
   //step3: get the _id of user and pass it to Liability collection
 
