@@ -1,0 +1,12 @@
+
+> back-end-api@1.0.0 start /root/apps/backendapi
+> NODE_ENV=production node server
+
+server running in production mode on port 5000
+Mongo running 
+
+> back-end-api@1.0.0 start /root/apps/backendapi
+> NODE_ENV=production node server
+
+Server started at http://128.199.115.213:5000
+Mongo running 
