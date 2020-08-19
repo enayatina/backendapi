@@ -1,8 +1,9 @@
 const express = require('express');
-const { getPlanning } = require('../controllers/user');
+const { getPlanning, userLogin } = require('../controllers/user');
 
 const router = express.Router();
 
 router.get('/getPlanning/:email', getPlanning);
+router.post('/userlogin', userLogin);
 
 module.exports = router;
