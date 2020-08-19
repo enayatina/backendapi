@@ -48,6 +48,7 @@ exports.getPlanning = asyncHandler(async (req, res, next) => {
 
   //calculate current assets
   const current_assets = current_invested_assets + lump_sum_investiable_amount;
+
   //calculate yearly savings
   const yearly_savings = current_assets * 12;
   const monthly_invest = yearly_savings / 12;
@@ -91,6 +92,7 @@ exports.getPlanning = asyncHandler(async (req, res, next) => {
   }
 
   //console.log(Math.max(spouseSupport, kidsSupport, parentsSupport));
+
   //Term insurance
   const years_to_retire = retirement_age - user.age;
   const li_a = 10 * user.annual_income_after_tax + liabTotal;
@@ -176,4 +178,8 @@ exports.getPlanning = asyncHandler(async (req, res, next) => {
   //Insurance
 
   res.status(200).json({ success: true, data: userData });
+});
+
+exports.userLogin = asyncHandler(async (req, res, next) => {
+  res.status(200).json({ success: true, msg: 'You are logged in' });
 });
