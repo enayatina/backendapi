@@ -57,9 +57,7 @@ exports.getPlanning = asyncHandler(async (req, res, next) => {
   userData.push({ monthly_invest });
 
   //Financial risk management
-
   //get ideal (li_a)value (10*annual income + libilities)
-
   //get sum of libilities using aggregate function
   const liabilities = await LiabilityData.findOne({ userID: userID });
   const arr = liabilities.libilities;
@@ -67,7 +65,6 @@ exports.getPlanning = asyncHandler(async (req, res, next) => {
   arr.forEach((element) => {
     liabTotal += element.outstanding;
   });
-  //console.log(liabTotal);
 
   //get insurance data
   const insurancedata = await Insurance.findOne({ userID: userID });
@@ -96,27 +93,33 @@ exports.getPlanning = asyncHandler(async (req, res, next) => {
   //Term insurance
   const years_to_retire = retirement_age - user.age;
   const li_a = 10 * user.annual_income_after_tax + liabTotal;
-  //console.log(li_a);
   const annual_e = user.monthly_expenses * 12;
   const li_b =
     Math.max(spouseSupport, kidsSupport, parentsSupport) * annual_e + liabTotal;
-  //console.log(li_b);
   const ideal = Math.max(li_a, li_b);
-  console.log(insurancedata);
 
   //CALCULATE SHORTFALL
   const life_insurance = ideal - insurancedata.life_coverage;
   userData.push({ life_insurance });
   userData.push({ years_to_retire });
-  //console.log(ideal);
 
-  //critical insurance
+  //CRITICAL ILLNESS
   if (years_to_retire > 5) {
-    const cr_ill = 5 * user.annual_income_after_tax;
-    userData.push({ cr_ill });
+    const cr_ill_ideal = 5 * user.annual_income_after_tax;
+    const cr_ill_shortfall = cr_ill_ideal - insurancedata.ci_coverage;
+
+    let cr_in_color = '';
+    if (cr_ill_shortfall >= cr_ill_ideal) {
+      cr_in_color = 'green';
+    } else {
+      cr_in_color = 'red';
+    }
+
+    userData.push({ cr_ill_shortfall });
+    userData.push({ cr_in_color });
   }
 
-  //health insurance
+  //HEALTH INSURANCE
   let no_of_dependent = 0;
   if (dependentdata.spouse > 1) {
     no_of_dependent++;
@@ -134,10 +137,19 @@ exports.getPlanning = asyncHandler(async (req, res, next) => {
 
   const totalCoverage = recommendedAmount + dependentAmountFinal;
   const health_shortfall = totalCoverage - insurancedata.health_insurance;
+
+  let hi_in_color = '';
+  if (health_shortfall >= totalCoverage) {
+    hi_in_color = 'green';
+  } else {
+    hi_in_color = 'red';
+  }
+
   userData.push({ health_shortfall });
   userData.push({ no_of_dependent });
+  userData.push({ hi_in_color });
 
-  //get goals calculations
+  //GET GOAL CALCULATIONS
   const goals = await Goals.findOne({ userID: userID });
   const arr_goal = goals.goals;
   let totalTime = 0;
@@ -154,8 +166,7 @@ exports.getPlanning = asyncHandler(async (req, res, next) => {
   }
 
   //Current status calculations
-
-  //Investments
+  //INVESTMENTS
   const emergency_fund = userAssets.savings + userAssets.fixedDeposit;
   const monthly_salary = user.annual_income_after_tax / 12;
   const monthly_savings = user.monthly_savings;
@@ -174,8 +185,6 @@ exports.getPlanning = asyncHandler(async (req, res, next) => {
     investment_color = 'blue';
   }
   userData.push({ investment_color });
-
-  //Insurance
 
   res.status(200).json({ success: true, data: userData });
 });
