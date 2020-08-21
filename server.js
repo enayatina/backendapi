@@ -12,6 +12,7 @@ const libility = require('./routes/libility');
 const assumption = require('./routes/assumption');
 const auth = require('./routes/auth');
 const loan = require('./routes/childloan');
+const cwa = require('./routes/cwa');
 
 const { json } = require('express');
 
@@ -46,6 +47,8 @@ app.use('/api/v1/assumption', assumption);
 app.use('/api/v1/auth', auth);
 app.use('/api/v1/user', user);
 app.use('/api/v1/loan', loan);
+app.use('/api/v1/cwa', cwa);
+
 
 //middleware for error handler
 app.use(errorHandler);
