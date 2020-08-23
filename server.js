@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const morgan = require('morgan');
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/error');
+//const cors = require('cors');
 
 //call router
 const planning = require('./routes/planning');
@@ -32,7 +33,8 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 //Server static folder - public
-app.use(express.static(path.join(__dirname,'public')));
+app.use(express.static(path.join(__dirname, 'public')));
+//app.use(cors);
 
 PORT = process.env.PORT || 5000;
 const server = app.listen(
@@ -48,7 +50,6 @@ app.use('/api/v1/auth', auth);
 app.use('/api/v1/user', user);
 app.use('/api/v1/loan', loan);
 app.use('/api/v1/cwa', cwa);
-
 
 //middleware for error handler
 app.use(errorHandler);

@@ -60,10 +60,13 @@ exports.getPlanning = asyncHandler(async (req, res, next) => {
   //get ideal (li_a)value (10*annual income + libilities)
   //get sum of libilities using aggregate function
   const liabilities = await LiabilityData.findOne({ userID: userID });
+  userData.push({ liabilities });
   const arr = liabilities.libilities;
   let liabTotal = 0;
+  let totalEmi = 0;
   arr.forEach((element) => {
     liabTotal += element.outstanding;
+    totalEmi += element.emi;
   });
 
   //get insurance data
@@ -71,6 +74,7 @@ exports.getPlanning = asyncHandler(async (req, res, next) => {
 
   //get dependents data
   const dependentdata = await Dependents.findOne({ userID: userID });
+  userData.push({ dependentList: dependentdata });
   let spouseSupport = 0;
   let kidsSupport = 0;
   let parentsSupport = 0;
@@ -101,7 +105,7 @@ exports.getPlanning = asyncHandler(async (req, res, next) => {
   //CALCULATE SHORTFALL
   const life_insurance = ideal - insurancedata.life_coverage;
   userData.push({ life_insurance });
-  userData.push({ years_to_retire });
+  userData.push({ retirement_age });
 
   //CRITICAL ILLNESS
   if (years_to_retire > 5) {
@@ -152,11 +156,12 @@ exports.getPlanning = asyncHandler(async (req, res, next) => {
   //GET GOAL CALCULATIONS
   const goals = await Goals.findOne({ userID: userID });
   const arr_goal = goals.goals;
+
   let totalTime = 0;
   arr_goal.forEach((element) => {
     totalTime += element.time_horizon;
   });
-  console.log(totalTime);
+
   if (totalTime < 2) {
     let goal_prediction = true;
     userData.push({ goal_prediction });
@@ -172,19 +177,124 @@ exports.getPlanning = asyncHandler(async (req, res, next) => {
   const monthly_savings = user.monthly_savings;
   const monthly_expense = monthly_salary - monthly_savings;
 
-  const emergency_fund_ratio = emergency_fund - monthly_expense;
+  const emergency_fund_ratio = emergency_fund / monthly_expense;
+  userData.push({ emergency_fund_ratio });
   let investment_color = '';
-
+  let emergency_fund_ratio_X = '';
+  let emergency_fund_ratio_A = '';
+  let emergency_fund_ratio_B_1 = '';
+  emergency_fund_ratio_B_1_1 = '';
+  let emergency_fund_ratio_B_2 = '';
+  let emergency_fund_ratio_B = '';
+  let rate_of_return = 4;
+  let avg_FD = 6;
+  let saving_ror = 4;
   if (emergency_fund_ratio < 3) {
     investment_color = 'red';
+    emergency_fund_ratio_X = 3 * monthly_expense - emergency_fund;
   }
   if (emergency_fund_ratio > 3 && emergency_fund_ratio < 6) {
     investment_color = 'green';
+    emergency_fund_ratio_X = 3 * monthly_expense - emergency_fund;
   }
   if (emergency_fund_ratio > 6) {
     investment_color = 'blue';
+    emergency_fund_ratio_A = emergency_fund - 6 * monthly_expense;
+    emergency_fund_ratio_B_1_1 = 1 + rate_of_return;
+    emergency_fund_ratio_B_1_2 =
+      emergency_fund_ratio_A * emergency_fund_ratio_B_1_1;
+    emergency_fund_ratio_B_1 = Math.pow(emergency_fund_ratio_B_1_2, 20);
+
+    emergency_fund_ratio_B_2_1 = 1 + avg_FD;
+    emergency_fund_ratio_B_2_2 =
+      emergency_fund_ratio_A * emergency_fund_ratio_B_2_1;
+    emergency_fund_ratio_B_2 = Math.pow(emergency_fund_ratio_B_2_2, 20);
+
+    emergency_fund_ratio_B =
+      emergency_fund_ratio_B_1 - emergency_fund_ratio_B_2;
   }
   userData.push({ investment_color });
+  userData.push({ emergency_fund_ratio_B }, { emergency_fund_ratio_A });
+
+  //Remedy data to be calculated here
+  //Get the data for calculations
+  const emergency_fund_ratio_color = investment_color;
+  userData.push({ emergency_fund_ratio_color });
+
+  const debt_servicing_ratio = totalEmi / monthly_salary;
+  let debt_servicing_ratio_color = '';
+  if (debt_servicing_ratio > 35) {
+    debt_servicing_ratio_color = 'red';
+  }
+  if (debt_servicing_ratio <= 35) {
+    debt_servicing_ratio_color = 'green';
+  }
+  userData.push({ debt_servicing_ratio });
+  userData.push({ debt_servicing_ratio_color });
+
+  const saving_ratio = monthly_savings / monthly_salary;
+  let saving_ratio_color = '';
+  if (saving_ratio > 10) {
+    saving_ratio_color = 'red';
+  } else {
+    saving_ratio_color = 'green';
+  }
+  userData.push({ saving_ratio });
+  userData.push({ saving_ratio_color });
+
+  const totalAssetValue =
+    userAssets.savings +
+    userAssets.fixedDeposit +
+    userAssets.investments +
+    userAssets.residentialProperty;
+  const invest_to_networth_ratio = userAssets.investments / totalAssetValue;
+  let invest_to_networth_ratio_color = '';
+  if (invest_to_networth_ratio < 50) {
+    invest_to_networth_ratio_color = 'red';
+  }
+  if (invest_to_networth_ratio >= 50) {
+    invest_to_networth_ratio_color = 'green';
+  }
+  userData.push({ invest_to_networth_ratio });
+  userData.push({ invest_to_networth_ratio_color });
+  const net_worth = totalAssetValue - liabTotal;
+  const solvency_ratio = net_worth / totalAssetValue;
+  let solvency_ratio_color = '';
+  if (solvency_ratio < 50) {
+    solvency_ratio_color = 'red';
+  }
+  if (solvency_ratio >= 50) {
+    solvency_ratio_color = 'green';
+  }
+  userData.push({ solvency_ratio });
+  userData.push({ solvency_ratio_color });
+
+  //Investment and Retirement planning strategy
+  //calculate year ending balance for calculating L13 from retirement sheet
+  //NOW
+  let current_age = user.age;
+  let annual_income = user.annual_income_after_tax;
+  let inflation_rate = 6.5;
+  let annual_income_increase = 8.15;
+  let annual_saving_increase = annual_income_increase - inflation_rate;
+  let current_assets_retirement = current_assets;
+  let annual_saving = monthly_savings * 12;
+  let investment_returns_now = 8.6;
+  let user_gender = user.gender;
+  let savings_ratio = annual_saving / annual_income;
+
+  //AT RETIREMENT
+  let investment_returns_at_retirement = 6;
+
+  //Calculation is pending but setting up a value for now
+  let year_ending_balance = 4000000;
+
+  userData.push({ bequest_min: 0 }, { bequest_max: year_ending_balance });
+  userData.push(
+    { listofgoals: arr_goal },
+    { years_to_retire: years_to_retire },
+    { monthly_surplus: monthly_salary }
+  );
 
   res.status(200).json({ success: true, data: userData });
 });

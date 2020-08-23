@@ -12,6 +12,7 @@
   "dependencies": {
     "@sendgrid/mail": "^7.2.2",
     "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "docgen": "0.0.1",
     "dotenv": "^8.2.0",
