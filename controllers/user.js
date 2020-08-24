@@ -40,14 +40,14 @@ exports.getPlanning = asyncHandler(async (req, res, next) => {
   }
 
   const lump_sum_invest =
-    userAssets.savings + userAssets.fixedDeposit - 6 * user.monthly_expenses;
+    Number(userAssets.savings) + Number(userAssets.fixedDeposit) - (6 * user.monthly_expenses);
 
   const current_invested_assets = userAssets.investments;
   const lump_sum_investiable_amount =
-    userAssets.savings + userAssets.fixedDeposit - 6 * user.monthly_expenses;
+    Number(userAssets.savings) + Number(userAssets.fixedDeposit) - (6 * user.monthly_expenses);
 
   //calculate current assets
-  const current_assets = current_invested_assets + lump_sum_investiable_amount;
+  const current_assets = Number(current_invested_assets) + Number(lump_sum_investiable_amount);
 
   //calculate yearly savings
   const yearly_savings = current_assets * 12;
@@ -84,12 +84,12 @@ exports.getPlanning = asyncHandler(async (req, res, next) => {
   if (dependentdata.kids < 1) {
     kidsSupport = 0;
   } else {
-    kidsSupport = 22 - dependentdata.kids;
+    kidsSupport = 22 - Number(dependentdata.kids);
   }
   if (dependentdata.parents < 1) {
     kidsSupport = 0;
   } else {
-    parentsSupport = Math.min(user.age, 85 - dependentdata.parents);
+    parentsSupport = Math.min(user.age, 85 - Number(dependentdata.parents));
   }
 
   //console.log(Math.max(spouseSupport, kidsSupport, parentsSupport));
@@ -172,13 +172,14 @@ exports.getPlanning = asyncHandler(async (req, res, next) => {
 
   //Current status calculations
   //INVESTMENTS
-  const emergency_fund = userAssets.savings + userAssets.fixedDeposit;
+  const emergency_fund = Number(userAssets.savings) + Number(userAssets.fixedDeposit);
+  
   const monthly_salary = user.annual_income_after_tax / 12;
   const monthly_savings = user.monthly_savings;
   const monthly_expense = monthly_salary - monthly_savings;
 
   const emergency_fund_ratio = emergency_fund / monthly_expense;
-  userData.push({ emergency_fund_ratio });
+  userData.push({ emergency_fund_ratio },{emergency_fund}, {monthly_salary}, {monthly_savings}, {monthly_expense});
   let investment_color = '';
   let emergency_fund_ratio_X = '';
   let emergency_fund_ratio_A = '';
@@ -243,10 +244,10 @@ exports.getPlanning = asyncHandler(async (req, res, next) => {
   userData.push({ saving_ratio_color });
 
   const totalAssetValue =
-    userAssets.savings +
-    userAssets.fixedDeposit +
-    userAssets.investments +
-    userAssets.residentialProperty;
+    Number(userAssets.savings) +
+    Number(userAssets.fixedDeposit) +
+    Number(userAssets.investments) +
+    Number(userAssets.residentialProperty);
   const invest_to_networth_ratio = userAssets.investments / totalAssetValue;
   let invest_to_networth_ratio_color = '';
   if (invest_to_networth_ratio < 50) {
@@ -257,7 +258,7 @@ exports.getPlanning = asyncHandler(async (req, res, next) => {
   }
   userData.push({ invest_to_networth_ratio });
   userData.push({ invest_to_networth_ratio_color });
-  const net_worth = totalAssetValue - liabTotal;
+  const net_worth = Number(totalAssetValue) - Number(liabTotal);
   const solvency_ratio = net_worth / totalAssetValue;
   let solvency_ratio_color = '';
   if (solvency_ratio < 50) {
@@ -276,7 +277,7 @@ exports.getPlanning = asyncHandler(async (req, res, next) => {
   let annual_income = user.annual_income_after_tax;
   let inflation_rate = 6.5;
   let annual_income_increase = 8.15;
-  let annual_saving_increase = annual_income_increase - inflation_rate;
+  let annual_saving_increase = Number(annual_income_increase) - Number(inflation_rate);
   let current_assets_retirement = current_assets;
   let annual_saving = monthly_savings * 12;
   let investment_returns_now = 8.6;
