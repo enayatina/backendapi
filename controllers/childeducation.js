@@ -164,3 +164,38 @@ exports.expenses = asyncHandler(async (req, res, next) => {
   );
   res.status(200).json({ success: true, data: expenseData });
 });
+exports.taxDeduction = asyncHandler( async(req, res, next) => {
+  const taxData = req.body;
+  const taxResult = [];
+
+  const basicSalary = taxData.basicSalary
+  const hra = taxData.hra
+  const specialAllowance = taxData.specialAllowance
+  const otherIncome = taxData.otherIncome
+
+  //Calculate Gross Income
+const grossIncome = Number(basicSalary)+Number(hra)+Number(specialAllowance)+Number(otherIncome)
+  if(hra<360000){
+    const hraDeduction = hra
+  }else{
+    const hraDeduction = 360000
+  }
+  const standardDeduction = taxData.standardDeduction
+  const ownedPropertyTaxAndLoanInterest = taxData.ownedPropertyTaxAndLoanInterest
+
+  //Gross total Income
+  const grossTotalIncome = Number(grossIncome)-Number(hraDeduction)-Number(standardDeduction)-Number(ownedPropertyTaxAndLoanInterest)
+  
+  const under80C = taxData.under80C
+  const under80D = taxData.under80D
+
+  //Net taxable income
+  const taxableIncome = Number(grossTotalIncome)-Number(under80C)-Number(under80D)
+  //calculation for old slabs and new slabs
+  //OLD SLAB
+if(taxableIncome<=500000){
+
+}
+
+  //NEW SLAB
+});
