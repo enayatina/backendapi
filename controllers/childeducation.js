@@ -149,7 +149,8 @@ exports.expenses = asyncHandler(async (req, res, next) => {
     (Number(totalExp) - Number(houseRental)) / Number(totalIncome);
   const monthlyLeisureExpensesPercentage =
     Number(totalLeisure) / Number(totalIncome);
-  const monthlyContribution = Number(totalInvestments) / Number(totalIncome);
+
+  const monthlyContribution = totalInvestments / totalIncome;
 
   expenseData.push(
     { totalSavingRatio },
@@ -158,7 +159,8 @@ exports.expenses = asyncHandler(async (req, res, next) => {
     { monthlyInsurancePremium },
     { monthlyRental },
     { monthlyLivingExpensesPercentage },
-    { monthlyLeisureExpensesPercentage }
+    { monthlyLeisureExpensesPercentage },
+    { monthlyContribution }
   );
   res.status(200).json({ success: true, data: expenseData });
 });
