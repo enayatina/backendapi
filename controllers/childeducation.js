@@ -36,78 +36,129 @@ exports.childloan = asyncHandler(async (req, res, next) => {
     data: loanData,
   });
 });
-exports.expenses = asyncHandler( async(req, res, next) => {
+exports.expenses = asyncHandler(async (req, res, next) => {
+  const expenseData = [];
+  const userData = req.body;
 
-const expenseData=[]
-const userData = req.body
+  //Income Data
+  const tmsat = userData.monthlySalary;
+  const tmriat = userData.monthlyRentalIncome;
+  const tmiiat = userData.monthlyInvestment;
+  const totalIncome = Number(tmsat) + Number(tmriat) + Number(tmiiat);
+  expenseData.push({ totalIncome });
 
-//Income Data
-const tmsat = userData.monthlySalary;
-const tmriat = userData.monthlyRentalIncome;
-const tmiiat = userData.monthlyInvestment;
-const totalIncome = Number(tmsat)+Number(tmriat)+Number(tmiiat)
-expenseData.push({totalIncome})
+  //Expenses data
+  const hLoan = userData.homeLoan;
+  const cLoan = userData.carLoan;
+  const pLoan = userData.personalLoan;
+  const ccLoan = userData.creditCardLoan;
+  const otherLoan = userData.otherLoan;
+  const totalEMI =
+    Number(hLoan) +
+    Number(cLoan) +
+    Number(pLoan) +
+    Number(ccLoan) +
+    Number(otherLoan);
+  expenseData.push({ totalEMI });
 
-//Expenses data
-const hLoan = userData.homeLoan
-const cLoan = userData.carLoan
-const pLoan = userData.personalLoan
-const ccLoan = userData.creditCardLoan
-const otherLoan = userData.otherLoan
-const totalEMI = Number(hLoan)+Number(cLoan)+Number(pLoan)+Number(ccLoan)+Number(otherLoan)
-expenseData.push({totalEMI})
+  //Monthly insurance premium
+  const lifeInsurance = userData.lifeInsurance;
+  const termInsurance = userData.termInsurance;
+  const healthInsurance = userData.healthInsurance;
+  const houseInsurance = userData.houseInsurance;
+  const carInsurance = userData.carInsurance;
+  const otherInsurance = userData.otherInsurance;
+  const totalPremium =
+    Number(lifeInsurance) +
+    Number(termInsurance) +
+    Number(healthInsurance) +
+    Number(houseInsurance) +
+    Number(carInsurance) +
+    Number(otherInsurance);
+  expenseData.push({ totalPremium });
 
-//Monthly insurance premium
-const lifeInsurance = userData.lifeInsurance
-const termInsurance = userData.termInsurance
-const healthInsurance = userData.healthInsurance
-const houseInsurance = userData.houseInsurance
-const carInsurance = userData.carInsurance
-const otherInsurance = userData.otherInsurance
-const totalPremium = Number(lifeInsurance)+Number(termInsurance)+Number(healthInsurance)+Number(houseInsurance)+Number(carInsurance)+Number(otherInsurance)
-expenseData.push({totalPremium})
+  //living expenses
+  const houseRental = userData.houseRental;
+  const foodExpenses = userData.foodExpenses;
+  const clothingExpenses = userData.clothingExpenses;
+  const utilExpeses = userData.utilExpeses;
+  const car = userData.car;
+  const mobile = userData.mobile;
+  const houseHoldHelp = userData.houseHoldHelp;
+  const kidsEducation = userData.kidsEducation;
+  const medicalEx = userData.medicalEx;
+  const otherEx = userData.otherEx;
+  const otherPersoanalEx = userData.otherPersoanalEx;
+  const totalExp =
+    Number(houseRental) +
+    Number(foodExpenses) +
+    Number(clothingExpenses) +
+    Number(utilExpeses) +
+    Number(car) +
+    Number(mobile) +
+    Number(houseHoldHelp) +
+    Number(kidsEducation) +
+    Number(medicalEx) +
+    Number(otherEx) +
+    Number(otherEx) +
+    Number(otherPersoanalEx);
+  expenseData.push({ totalExp });
 
-//living expenses
-const houseRental = userData.houseRental
-const foodExpenses = userData.foodExpenses
-const clothingExpenses = userData.clothingExpenses
-const utilExpeses = userData.utilExpeses
-const car = userData.car
-const mobile = userData.mobile
-const houseHoldHelp = userData.houseHoldHelp
-const kidsEducation = userData.kidsEducation
-const medicalEx = userData.medicalEx
-const otherEx = userData.otherEx
-const otherPersoanalEx = userData.otherPersoanalEx
-const totalExp = Number(houseRental)+Number(foodExpenses)+Number(clothingExpenses)+
-Number(utilExpeses)+Number(car)+Number(mobile)+Number(houseHoldHelp)+
-Number(kidsEducation)+Number(medicalEx)+Number(otherEx)+Number(otherEx)+Number(otherPersoanalEx)
-expenseData.push({totalExp})
+  //monthly leisure expenses
+  const travelBudgt = userData.travel;
+  const entertBudgt = userData.entertBudgt;
+  const luxuryBudgt = userData.luxuryBudgt;
+  const otherBudgt = userData.otherBudgt;
+  const totalLeisure =
+    Number(travelBudgt) +
+    Number(entertBudgt) +
+    Number(luxuryBudgt) +
+    Number(otherBudgt);
+  expenseData.push({ totalLeisure });
 
-//monthly leisure expenses
-const travelBudgt = userData.travel
-const entertBudgt = userData.entertBudgt
-const luxuryBudgt = userData.luxuryBudgt
-const otherBudgt = userData.otherBudgt
-const totalLeisure = Number(travelBudgt)+Number(entertBudgt)+Number(luxuryBudgt)+Number(otherBudgt)
-expenseData.push({totalLeisure})
+  //monthly saving and investments
+  const savings_endowment = userData.savings_endowment;
+  const ulip_sip = userData.ulip_sip;
+  const fd = userData.fd;
+  const postOffice_pf = userData.postOffice_pf;
+  const otherInvestments = userData.otherInvestments;
+  const totalInvestments =
+    Number(savings_endowment) +
+    Number(ulip_sip) +
+    Number(fd) +
+    Number(postOffice_pf) +
+    Number(otherInvestments);
+  expenseData.push({ totalInvestments });
 
-//monthly saving and investments
-const savings_endowment = userData.savings_endowment
-const ulip_sip = userData.ulip_sip
-const fd = userData.fd
-const postOffice_pf = userData.postOffice_pf
-const otherInvestments = userData.otherInvestments
-const totalInvestments = Number(savings_endowment)+Number(ulip_sip)+Number(fd)+
-Number(postOffice_pf)+Number(otherInvestments)
-expenseData.push({totalInvestments})
+  const totalExpenses =
+    Number(totalEMI) +
+    Number(totalPremium) +
+    Number(totalExp) +
+    Number(totalLeisure) +
+    Number(totalInvestments);
+  const totalSurplus = Number(totalIncome) - Number(totalExpenses);
+  expenseData.push({ totalExpenses }, { totalSurplus });
 
-const totalExpenses = Number(totalEMI)+Number(totalPremium)+Number(totalExp)+
-Number(totalLeisure)+Number(totalInvestments)
-const totalSurplus = Number(totalIncome) - Number(totalExpenses)
-expenseData.push({totalExpenses},{totalSurplus})
+  const totalSavingRatio =
+    (Number(totalSurplus) + Number(totalInvestments)) / Number(totalIncome);
+  const monthlyLoanPayment = Number(totalEMI) / Number(totalIncome);
+  const monthlyMortgagePayment = Number(hLoan) / Number(totalIncome);
+  const monthlyInsurancePremium = Number(totalPremium) / Number(totalIncome);
+  const monthlyRental = Number(houseRental) / Number(totalIncome);
+  const monthlyLivingExpensesPercentage =
+    (Number(totalExp) - Number(houseRental)) / Number(totalIncome);
+  const monthlyLeisureExpensesPercentage =
+    Number(totalLeisure) / Number(totalIncome);
+  const monthlyContribution = Number(totalInvestments) / Number(totalIncome);
 
-
-
-res.status(200).json({ success: true, data: expenseData });
+  expenseData.push(
+    { totalSavingRatio },
+    { monthlyLoanPayment },
+    { monthlyMortgagePayment },
+    { monthlyInsurancePremium },
+    { monthlyRental },
+    { monthlyLivingExpensesPercentage },
+    { monthlyLeisureExpensesPercentage }
+  );
+  res.status(200).json({ success: true, data: expenseData });
 });
