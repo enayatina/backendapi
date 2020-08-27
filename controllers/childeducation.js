@@ -204,8 +204,13 @@ exports.taxDeduction = asyncHandler(async (req, res, next) => {
   const under80C = taxData.under80C;
   const under80D = taxData.under80D;
 
+  let under80C_ideal = 150000
+  let under80d_ideal = 50000
+
+
+
   //Net taxable income
-  const taxableIncome = grossTotalIncome - taxData.under80c - taxData.under80d;
+  const taxableIncome = grossTotalIncome -under80C_ideal - under80d_ideal;
   console.log('taxable income', taxableIncome);
   //calculation for old slabs and new slabs
   //OLD SLAB
@@ -221,15 +226,79 @@ exports.taxDeduction = asyncHandler(async (req, res, next) => {
   let b9 = 30;
   let b10 = 30;
 
+  
+
   if (taxableIncome <= 500000) {
-    const taxAmount = 0;
+    const finalAmount = 0;
   }
-  if (taxableIncome > 500000 && taxableIncome <= 750000) {
-    const amount = taxableIncome - 500000;
-    const per_amount = amount * b7;
-    const taxAmount = Number(b6) + per_amount;
-    console.log(taxAmount);
+  if (taxableIncome > 500000 && taxableIncome <= 750000) {    
+    const amount = taxableIncome - 500000   
+    var percent = (20 / 100) * amount;
+    var finalAmount = 12500 + Number(percent)
   }
 
-  //NEW SLAB
+  if (taxableIncome > 750000 && taxableIncome <= 1000000) {
+    const amount = taxableIncome - 1000000   
+   var percent = (20 / 100) * amount;
+   var finalAmount = 12500 + Number(percent)
+  }
+
+  if (taxableIncome > 1000000 && taxableIncome <= 1250000) {    
+   const amount = taxableIncome - 1000000   
+   var percent = (30 / 100) * amount;
+   var finalAmount = 112500 + Number(percent)
+  }
+  if (taxableIncome > 1250000 && taxableIncome <= 1500000) {    
+    const amount = taxableIncome - 1000000    
+    var percent = (30 / 100) * amount;
+    var finalAmount = 112500 + Number(percent)      
+   }
+
+   if (taxableIncome > 1500000) {    
+    const amount = taxableIncome - 1000000    
+    var percent = (30 / 100) * amount;
+    var finalAmount = 112500 + Number(percent)
+   }
+   taxResult.push({oldSlab:finalAmount});
+
+   //NEW SLAB
+   if (grossIncome <= 500000) {
+    var finalAmount_new = 12500 + Number(percent)
+  }
+  if (grossIncome > 500000 && grossIncome <= 750000) {    
+    
+    const amount = grossIncome - 500000    
+    var percent = (10 / 100) * amount;
+    var finalAmount_new = 12500 + Number(percent)
+  }
+
+  if (grossIncome > 750000 && grossIncome <= 1000000) {
+    
+    const amount = grossIncome - 750000   
+   var percent = (15 / 100) * amount;
+   var finalAmount_new = 37500 + Number(percent)
+  }
+
+  if (grossIncome > 1000000 && grossIncome <= 1250000) {    
+    
+   const amount = grossIncome - 1000000   
+   var percent = (20 / 100) * amount;
+   var finalAmount_new = 112500 + Number(percent)
+  }
+  if (grossIncome > 1250000 && grossIncome <= 1500000) {  
+    
+    const amount = taxableIncome - 1250000    
+    var percent = (25 / 100) * amount;
+    var finalAmount_new = 125000 + Number(percent)      
+   }
+
+   if (grossIncome > 1500000) {    
+    const amount = grossIncome - 1500000    
+    var percent = (30 / 100) * amount;
+    var finalAmount_new = 187500+Number(percent)   
+    
+   }
+   taxResult.push({newSlab:finalAmount_new});
+
+   res.status(200).json({ success: true, data: taxResult });
 });
