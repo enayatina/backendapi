@@ -119,7 +119,7 @@ exports.register = asyncHandler(async (req, res, next) => {
     });
 
     //Generate an OTP [6 digits ] and send it to mobile number
-    //console.log(Math.floor(100000 + Math.random() * 900000));
+    console.log(Math.floor(100000 + Math.random() * 900000));
     //const verificationCode = Math.floor(100000 + Math.random() * 900000);
   } else {
     console.log('do nothing', req.body.liabilities);
