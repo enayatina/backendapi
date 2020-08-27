@@ -298,7 +298,7 @@ exports.taxDeduction = asyncHandler(async (req, res, next) => {
     var finalAmount_new = 187500+Number(percent)   
     
    }
-   taxResult.push({newSlab:finalAmount_new});
+   taxResult.push({newSlab:finalAmount_new},{taxableIncome: taxableIncome});
 
    res.status(200).json({ success: true, data: taxResult });
 });
