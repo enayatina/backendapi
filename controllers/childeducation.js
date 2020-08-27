@@ -164,38 +164,72 @@ exports.expenses = asyncHandler(async (req, res, next) => {
   );
   res.status(200).json({ success: true, data: expenseData });
 });
-exports.taxDeduction = asyncHandler( async(req, res, next) => {
+exports.taxDeduction = asyncHandler(async (req, res, next) => {
   const taxData = req.body;
+  console.log(taxData);
   const taxResult = [];
 
-  const basicSalary = taxData.basicSalary
-  const hra = taxData.hra
-  const specialAllowance = taxData.specialAllowance
-  const otherIncome = taxData.otherIncome
+  const basicSalary = taxData.basicSalary;
+  const hra = taxData.hra;
+  const specialAllowance = taxData.specialAllowance;
+  const otherIncome = taxData.otherIncome;
 
   //Calculate Gross Income
-const grossIncome = Number(basicSalary)+Number(hra)+Number(specialAllowance)+Number(otherIncome)
-  if(hra<360000){
-    const hraDeduction = hra
-  }else{
-    const hraDeduction = 360000
+  let grossIncome =
+    Number(taxData.basicSalary) +
+    Number(taxData.hra) +
+    Number(taxData.specialAllownce) +
+    Number(taxData.otherIncome);
+  let hraDeduction = '';
+  console.log('gross income', grossIncome);
+  if (hra < 360000) {
+    hraDeduction = hra;
+  } else {
+    hraDeduction = 360000;
   }
-  const standardDeduction = taxData.standardDeduction
-  const ownedPropertyTaxAndLoanInterest = taxData.ownedPropertyTaxAndLoanInterest
+  console.log(hraDeduction);
+  const standardDeduction = taxData.standardDeduction;
+  const ownedPropertyTaxAndLoanInterest =
+    taxData.ownedPropertyTaxAndLoanInterest;
 
   //Gross total Income
-  const grossTotalIncome = Number(grossIncome)-Number(hraDeduction)-Number(standardDeduction)-Number(ownedPropertyTaxAndLoanInterest)
-  
-  const under80C = taxData.under80C
-  const under80D = taxData.under80D
+  const grossTotalIncome =
+    grossIncome -
+    hraDeduction -
+    taxData.standardDeduction -
+    ownedPropertyTaxAndLoanInterest;
+
+  console.log('gross total income', grossTotalIncome);
+
+  const under80C = taxData.under80C;
+  const under80D = taxData.under80D;
 
   //Net taxable income
-  const taxableIncome = Number(grossTotalIncome)-Number(under80C)-Number(under80D)
+  const taxableIncome = grossTotalIncome - taxData.under80c - taxData.under80d;
+  console.log('taxable income', taxableIncome);
   //calculation for old slabs and new slabs
   //OLD SLAB
-if(taxableIncome<=500000){
+  let c6 = 12500;
+  let c7 = 50000;
+  let c8 = 50000;
+  let c9 = 75000;
+  let c10 = 75000;
 
-}
+  let b6 = 5;
+  let b7 = 20;
+  let b8 = 20;
+  let b9 = 30;
+  let b10 = 30;
+
+  if (taxableIncome <= 500000) {
+    const taxAmount = 0;
+  }
+  if (taxableIncome > 500000 && taxableIncome <= 750000) {
+    const amount = taxableIncome - 500000;
+    const per_amount = amount * b7;
+    const taxAmount = Number(b6) + per_amount;
+    console.log(taxAmount);
+  }
 
   //NEW SLAB
 });
