@@ -64,7 +64,7 @@ exports.getPlanning = asyncHandler(async (req, res, next) => {
   userData.push({ liabilities });
   let liabTotal = 0;
   let totalEmi = 0;
-  if (liabilities.libilities) {
+  if (liabilities) {
     const arr = liabilities.libilities;
 
     arr.forEach((element) => {
