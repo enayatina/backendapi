@@ -159,9 +159,12 @@ exports.getPlanning = asyncHandler(async (req, res, next) => {
 
   //GET GOAL CALCULATIONS
   const goals = await Goals.findOne({ userID: userID });
-  const arr_goal = goals.goals;
+  const arr_goal = [];
 
   let totalTime = 0;
+  if(goals){
+    arr_goal = goals.goal;
+  }
   if(arr_goal){
     arr_goal.forEach((element) => {
       totalTime += element.time_horizon;
@@ -175,6 +178,8 @@ exports.getPlanning = asyncHandler(async (req, res, next) => {
       userData.push({ goal_prediction });
     }
   }
+    
+ 
   
 
   //Current status calculations
