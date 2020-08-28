@@ -60,14 +60,18 @@ exports.getPlanning = asyncHandler(async (req, res, next) => {
   //get ideal (li_a)value (10*annual income + libilities)
   //get sum of libilities using aggregate function
   const liabilities = await LiabilityData.findOne({ userID: userID });
+  console.log(liabilities);
   userData.push({ liabilities });
-  const arr = liabilities.libilities;
   let liabTotal = 0;
   let totalEmi = 0;
-  arr.forEach((element) => {
-    liabTotal += element.outstanding;
-    totalEmi += element.emi;
-  });
+  if (liabilities.libilities) {
+    const arr = liabilities.libilities;
+
+    arr.forEach((element) => {
+      liabTotal += element.outstanding;
+      totalEmi += element.emi;
+    });
+  }
 
   //get insurance data
   const insurancedata = await Insurance.findOne({ userID: userID });
