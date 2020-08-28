@@ -162,17 +162,20 @@ exports.getPlanning = asyncHandler(async (req, res, next) => {
   const arr_goal = goals.goals;
 
   let totalTime = 0;
-  arr_goal.forEach((element) => {
-    totalTime += element.time_horizon;
-  });
-
-  if (totalTime < 2) {
-    let goal_prediction = true;
-    userData.push({ goal_prediction });
-  } else {
-    let goal_prediction = false;
-    userData.push({ goal_prediction });
+  if(arr_goal){
+    arr_goal.forEach((element) => {
+      totalTime += element.time_horizon;
+    });
+  
+    if (totalTime < 2) {
+      let goal_prediction = true;
+      userData.push({ goal_prediction });
+    } else {
+      let goal_prediction = false;
+      userData.push({ goal_prediction });
+    }
   }
+  
 
   //Current status calculations
   //INVESTMENTS
